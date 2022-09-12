@@ -10,13 +10,13 @@ const socket = io.connect("http://localhost:4000");
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
-    const data = socket.on("connect", () => {
+    socket.on("connect", () => {
       socket.emit("start");
       socket.on("ticker", (quotes) => {
         dispatch(tickerActions.setTickers(quotes));
       });
     });
-  }, [socket]);
+  }, [dispatch]);
 
   return (
     <div className="App">

@@ -1,11 +1,15 @@
 import React from "react";
-// import { useSelector } from 'react-redux';
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
 
 function Ticker({ ticker }) {
   return (
-    <div className="card">
-      <div className="card-header">{`${ticker.ticker} - ${ticker.price}`}</div>
-    </div>
+    <TableRow>
+      <TableCell>{ticker.ticker}</TableCell>
+      <TableCell>{ticker.price}</TableCell>
+      <TableCell>{ticker.change}</TableCell>
+      <TableCell>{ticker.dividend}</TableCell>
+    </TableRow>
   );
 }
 
