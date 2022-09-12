@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import io from "socket.io-client";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import Tickers from "./Components/TickersBoard";
+import { actions as tickerActions } from "./slices/tickersSlice.js";
+const socket = io.connect("http://localhost:4000");
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const data = socket.on("connect", () => {
+      socket.emit("start");
+      socket.on("ticker", (quotes) => {
+        dispatch(tickerActions.setTickers(quotes));
+      });
+    });
+  }, [socket]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Tickers />
     </div>
   );
 }
