@@ -10,7 +10,8 @@ import TableBody from "@mui/material/TableBody";
 import Ticker from "./Ticker.jsx";
 
 function Tickers() {
-  const { tickers } = useSelector((state) => state.tickersReducer);
+  const state = useSelector((state) => state.tickersReducer);
+  console.log(state);
   return (
     <Table>
       <TableHead>
@@ -20,12 +21,13 @@ function Tickers() {
           <TableCell>Change</TableCell>
           <TableCell>Divident</TableCell>
         </TableRow>
+        <TableRow>{/* <TableCell>{entities}</TableCell> */}</TableRow>
       </TableHead>
-      <TableBody>
-        {tickers.map((ticker) => (
+      {/* <TableBody>
+        {entities.map((ticker) => (
           <Ticker key={uniqueId("tkr_")} ticker={ticker} />
         ))}
-      </TableBody>
+      </TableBody> */}
     </Table>
   );
 }
