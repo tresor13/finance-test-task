@@ -10,6 +10,19 @@ import TableBody from "@mui/material/TableBody";
 
 import Ticker from "./Ticker.jsx";
 
+const tickerColors = {
+  AAPL: { background: "#eeeeee", text: "black" },
+  GOOGL: {
+    background:
+      "linear-gradient(to right,#4285F4, #4285F4 25%, #DB4437 25%, #DB4437 50%, #F4B400 50%, #F4B400 75%, #0F9D58 75%)",
+    text: "white",
+  },
+  MSFT: { background: "#00a1f1", text: "white" },
+  AMZN: { background: "#FF9900", text: "white" },
+  FB: { background: "#4267B2", text: "white" },
+  TSLA: { background: "black", text: "white" },
+};
+
 function Tickers() {
   const { ids, entities } = useSelector((state) => state.tickersReducer);
 
@@ -27,7 +40,11 @@ function Tickers() {
         </TableHead>
         <TableBody>
           {ids.map((id) => (
-            <Ticker key={uniqueId("tkr_")} ticker={entities[id]} />
+            <Ticker
+              key={uniqueId("tkr_")}
+              ticker={entities[id]}
+              colors={tickerColors[id]}
+            />
           ))}
         </TableBody>
       </Table>

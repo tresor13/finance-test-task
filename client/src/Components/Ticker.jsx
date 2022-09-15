@@ -2,20 +2,20 @@ import React from "react";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import ProfitStatus from "./ProfitStatus";
+
 const tickerLabel = {
   display: "inline-block",
-  color: "white",
-  background: "#0d6efd",
   width: "80px",
   height: "30px",
   lineHeight: "30px",
   borderRadius: "10px",
 };
-function Ticker({ ticker }) {
+function Ticker({ ticker, colors }) {
+  const { background, text } = colors;
   return (
     <TableRow>
       <TableCell align={"center"}>
-        <p style={tickerLabel}>{ticker.name}</p>
+        <p style={{ ...tickerLabel, background, color: text }}>{ticker.name}</p>
       </TableCell>
       <TableCell align={"center"}>{ticker.price}</TableCell>
       <TableCell align={"center"}>{ticker.change}</TableCell>
