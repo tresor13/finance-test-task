@@ -57,7 +57,6 @@ const tickersSlice = createSlice({
     removeTicker: (state, { payload }) => {
       const id = payload;
       state.removedTickers = uniq([...state.removedTickers, id]);
-      console.log(current(state));
       tickersAdapter.removeOne(state, id);
       return state;
     },
