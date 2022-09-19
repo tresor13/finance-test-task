@@ -1,17 +1,25 @@
-import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
+import { createSlice, createEntityAdapter, current } from "@reduxjs/toolkit";
 import { uniq } from "lodash";
 import { tickersDataAdapter } from "./adapters";
 import { getStatus } from "../utils/utils";
 
 const tickersAdapter = createEntityAdapter();
-const initialState = tickersAdapter.getInitialState();
 const tickersSlice = createSlice({
   name: "tickers",
-  initialState,
+  initialState: tickersAdapter.getInitialState({ removedTickers: [] }),
+
+  //I've added a 'Removed Tickers' condition in state to hide tickers that have been removed
+  //by the user. This solution is not very good, but the best in the conditions of the problem,
+  //because otherwise, I would have to disconnect from the socket, send a request to remove
+  //the ticker from the database, and reconnect again.
+
   reducers: {
     setTickers: (state, { payload }) => {
       const adaptedData = tickersDataAdapter(payload);
-      const tickerNames = adaptedData.map((item) => item.name);
+      const tickersToHide = state.removedTickers;
+      const tickerNames = adaptedData
+        .map((item) => item.name)
+        .filter((ticker) => !tickersToHide.includes(ticker));
       const newIds = [...state.ids, ...tickerNames];
       const newEntities = adaptedData.reduce((res, item) => {
         const tickerName = item.name;
@@ -42,50 +50,22 @@ const tickersSlice = createSlice({
           },
         };
       }, state.entities);
-      return {
-        ids: uniq(newIds),
-        entities: newEntities,
-      };
-      // setTickers(state, { adaptedData }) {
-      //   adaptedData.forEach((ticker) => {
-      //     const tickerName = ticker.ticker;
-      //     const {
-      //       price,
-      //       exchange,
-      //       change,
-      //       change_percent,
-      //       dividend,
-      //       yield,
-      //       last_trade_time,
-      //     } = ticker;
-
-      //     state.ids.push(tickerName);
-      //     const setStatus = () => {
-      //       const existedTickerYield =
-      //         state.entities[tickerName] && state.entities[tickerName].yield;
-      //       console.log(existedTickerYield);
-      //       if (existedTickerYield && ticker.yield > existedTickerYield)
-      //         return "rising";
-      //       if (existedTickerYield && ticker.yield < existedTickerYield)
-      //         return "falling";
-      //       return "noChange";
-      //     };
-      //     const status = setStatus();
-      //     state.entities[tickerName] = {
-      //       status,
-      //       price,
-      //       exchange,
-      //       change,
-      //       change_percent,
-      //       dividend,
-      //       yield,
-      //       last_trade_time,
-      //     };
-      //   });
-      // },
+      state.ids = uniq(newIds);
+      state.entities = newEntities;
+      return state;
+    },
+    removeTicker: (state, { payload }) => {
+      const id = payload;
+      state.removedTickers = uniq([...state.removedTickers, id]);
+      console.log(current(state));
+      tickersAdapter.removeOne(state, id);
+      return state;
     },
   },
 });
 
+export const selectors = tickersAdapter.getSelectors(
+  (state) => state.tickersReducer
+);
 export const { actions } = tickersSlice;
 export default tickersSlice.reducer;

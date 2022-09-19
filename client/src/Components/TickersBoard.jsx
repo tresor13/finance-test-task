@@ -25,7 +25,6 @@ const tickerColors = {
 
 function Tickers() {
   const { ids, entities } = useSelector((state) => state.tickersReducer);
-
   return (
     <Container maxWidth="sm">
       <Table>
@@ -36,6 +35,7 @@ function Tickers() {
             <TableCell align={"center"}>Change</TableCell>
             <TableCell align={"center"}>Divident</TableCell>
             <TableCell align={"center"}>Yield</TableCell>
+            <TableCell align={"center"}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -44,6 +44,7 @@ function Tickers() {
               key={uniqueId("tkr_")}
               ticker={entities[id]}
               colors={tickerColors[id]}
+              id={id}
             />
           ))}
         </TableBody>
